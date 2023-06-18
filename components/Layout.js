@@ -6,8 +6,10 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 
 export default function Layout({ title, children }) {
   // eslint-disable-next-line no-unused-vars
-  const { state, dispatch } = useContext(Favourites);
-  const { favourites } = state;
+
+  //TODO
+  // const { state, dispatch } = useContext(Favourites);
+  // const { favourites } = state;
 
   const { data: session, status } = useSession();
   const loading = status === 'loading';
@@ -29,16 +31,19 @@ export default function Layout({ title, children }) {
         <link rel="icon" href="favicon.ico" />
       </Head>
 
-      <div className="flex flex-col min-h-screen">
-        <header>
-          <nav className="flex h-12 justify-between items-center px-4 shadow-md">
+      <div className="flex flex-col min-h-screen bg-indigo-50">
+        <header className="z-10 shadow-lg bg-white">
+          <nav className="flex h-12 justify-between items-center px-4 ">
             <Link href="/" legacyBehavior>
               <a className="text-lg font-bold">News</a>
             </Link>
             <div className="flex flex-row">
-              <Link href="/favourites" legacyBehavior>
-                <a className="p-2">Favourites</a>
-              </Link>
+              {session && (
+                <Link href="/favourites" legacyBehavior>
+                  <a className="p-2 font-semibold">Favourites</a>
+                </Link>
+              )}
+
               <div className="p-2">
                 <Link href="/" legacyBehavior>
                   <a className="logo">{session?.user.name}</a>
@@ -65,7 +70,7 @@ export default function Layout({ title, children }) {
             </div>
           </nav>
         </header>
-        <main className="container">{children}</main>
+        <div className="h-full flex z-0 ">{children}</div>
       </div>
     </>
   );

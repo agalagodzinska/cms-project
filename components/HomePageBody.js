@@ -22,20 +22,57 @@ async function searchNews(q) {
   return body.value;
 }
 export default function HomePageBody() {
-  const { state, dispatch } = useContext(Favourites);
+  // const { state, dispatch } = useContext(Favourites);
 
-  const addRemoveFavourites = (article) => {
-    const existArticle = state.favourites.newsArticles.find(
-      (x) => x.url === article.url
-    );
+  // const addRemoveFavourites = (article) => {
+  //   const existArticle = state.favourites.newsArticles.find(
+  //     (x) => x.url === article.url
+  //   );
 
-    if (existArticle) {
-      dispatch({ type: 'FAVOURITES_REMOVE_ARTICLE', payload: article });
-    } else {
-      dispatch({
-        type: 'FAVOURITES_ADD_ARTICLE',
-        payload: { ...article },
+  //   if (existArticle) {
+  //     dispatch({ type: 'FAVOURITES_REMOVE_ARTICLE', payload: article });
+  //   } else {
+  //     dispatch({
+  //       type: 'FAVOURITES_ADD_ARTICLE',
+  //       payload: { ...article },
+  //     });
+  //   }
+  //   //TODO
+  // };
+
+  const addRemoveFavourite = async ({
+    imageUrl,
+    url,
+    title,
+    description,
+    datePublished,
+    provider,
+    category,
+  }) => {
+    try {
+      await axios.post('/api/addRemoveFavourite', {
+        imageUrl,
+        url,
+        title,
+        description,
+        datePublished,
+        provider,
+        category,
       });
+
+      //   const registerResult = await signIn('credentials', {
+      //     redirect: false,
+      //     email,
+      //     password,
+      //   });
+      //   console.log('onsubmit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      //   if (registerResult.error) {
+      //     //cos jak błąd
+      //     console.log('error1 ugvcfdfghnjmnhbgvgbhjngvbhjnbghnj');
+      //   }
+    } catch (error) {
+      console.log('error2 xecrtvbyunbytvcrxectvbyunbytvcrxecrtvbyun');
+      //znowu błąd
     }
   };
 
@@ -47,16 +84,21 @@ export default function HomePageBody() {
     searchNews(query).then(setList);
   };
 
+  
+
   return (
     <div className=" bg-indigo-50 w-screen h-full">
-      <div className="w-11/12 mx-auto">
-        <form onSubmit={search} className="mt-8 w-full">
+      <div className="w-10/12 mx-auto">
+        <form onSubmit={search} className=" flex mt-12 mb-6 w-full px-auto">
           <input
+            className="w-2/3 border border-indigo-400 rounded-md"
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <button className="search-button">Search</button>
+          <button className="bg-indigo-900 hover:bg-indigo-700 text-white ml-6 px-6 py-3 rounded-md text-lg">
+            Search
+          </button>
         </form>
 
         {!list ? null : list.length === 0 ? (
@@ -69,7 +111,17 @@ export default function HomePageBody() {
               <NewsArticle
                 key={i}
                 article={article}
-                addRemoveFavourites={() => addRemoveFavourites(article)}
+                addRemoveFavourite={() =>
+                  addRemoveFavourite(
+                    article.imageUrl ? article.imageUrl : 'null',
+                    article.url,
+                    article.title ? article.title : 'null',
+                    article.description ? article.description : 'null',
+                    article.datePublished ? article.datePublished : 'null',
+                    article.provider ? article.provider : 'null',
+                    article.category ? article.category : 'null'
+                  )
+                }
               />
             ))}
           </ul>

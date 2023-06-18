@@ -8,9 +8,9 @@ export default function App({
 }) {
   return (
     <SessionProvider session={session}>
-      <FavouritesProvider>
+      {/* <FavouritesProvider> */}
         <Component {...pageProps} />
-      </FavouritesProvider>
+      {/* </FavouritesProvider> */}
     </SessionProvider>
   );
 }

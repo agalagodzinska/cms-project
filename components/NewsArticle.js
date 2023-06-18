@@ -1,16 +1,18 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Heart from 'react-animated-heart';
+import { useState } from 'react';
 
-//Link nie dziala
-
-export default function NewsArticle({ article, addRemoveFavourites }) {
+export default function NewsArticle({ article, addRemoveFavourite }) {
   const separateWords = (s) => s.replace(/[A-Z][a-z]+/g, '$& ').trim();
   const formatDate = (s) =>
     new Date(s).toLocaleDateString(undefined, { dateStyle: 'long' });
 
+  //nie jest zapamietywane w bazie czy serduszko czerwone
+  const [isClick, setClick] = useState(false);
   return (
-    <div className="relative flex flex-row p-4 rounded-md mb-4 bg-white shadow-[0_2px_6px_2px_rgba(0,0,0,0,0.14)">
+    <div className="relative flex flex-row justify-between p-4 rounded-md mb-4 bg-white shadow-md">
       <li className="list-none">
         {article.image && (
           <img className="" alt="" src={article.image?.thumbnail?.contentUrl} />
@@ -30,7 +32,15 @@ export default function NewsArticle({ article, addRemoveFavourites }) {
           {article.category && <span>{separateWords(article.category)}</span>}
         </div>
       </li>
-      <button className="absolute top-0 right-0 mt-4 mr-4" onClick={addRemoveFavourites}>serducszko</button>
+      <div className="mr-0">
+        <Heart
+          isClick={isClick}
+          onClick={() => {
+            addRemoveFavourite;
+            setClick(!isClick);
+          }}
+        ></Heart>
+      </div>
     </div>
   );
 }

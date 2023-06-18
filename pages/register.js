@@ -53,16 +53,18 @@ export default function LoginScreen() {
     <Layout title={'Register'}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col mx-auto justify-center w-fit mt-10 bg-indigo-100 p-12 rounded-xl shadow-lg shadow-indigo-900"
+        className="flex flex-col mx-auto justify-center w-fit h-fit my-auto bg-indigo-100 p-12 rounded-xl shadow-lg shadow-indigo-900"
       >
         <h1 className="text-3xl font-bold justify-center mx-auto w-fit mb-10">
           Register
         </h1>
-        <div className="mb-4">
-          <label htmlFor="name">Name</label>
+        <div className="relative w-[360px]">
+          <label htmlFor="name" className="mr-2 text-xl">
+            Name
+          </label>
           <input
             type="text"
-            className="w-full"
+            className="absolute inset-y-0 right-0 rounded-md shadow-sm"
             id="name"
             {...register('name', {
               required: 'Please enter name',
@@ -72,7 +74,7 @@ export default function LoginScreen() {
             <div className="text-red-500">{errors.name.message}</div>
           )}
         </div>
-        <div className="relative w-[300px]">
+        <div className="relative w-[360px] mt-4">
           <label htmlFor="email" className="mr-2 text-xl">
             Email
           </label>
@@ -80,7 +82,7 @@ export default function LoginScreen() {
             type="email"
             id="email"
             {...register('email', { required: true })}
-            className="absolute inset-y-0 right-0"
+            className="absolute inset-y-0 right-0  rounded-md shadow-sm"
           ></input>
           {errors.email && (
             <span style={{ color: 'red' }} className=" justify-end text-end">
@@ -89,7 +91,7 @@ export default function LoginScreen() {
           )}
         </div>
 
-        <div className="relative mt-4 w-[300px]">
+        <div className="relative mt-4 w-[360px]">
           <label htmlFor="password" className="mr-2 text-xl">
             Password
           </label>
@@ -97,7 +99,7 @@ export default function LoginScreen() {
             type="password"
             id="password"
             {...register('password', { required: true })}
-            className="absolute inset-y-0 right-0"
+            className="absolute inset-y-0 right-0  rounded-md shadow-sm"
           ></input>
           {errors.password && (
             <span style={{ color: 'red' }} className=" justify-end text-end">
@@ -106,7 +108,7 @@ export default function LoginScreen() {
           )}
         </div>
 
-        <div className="relative mt-4 w-[300px]">
+        <div className="relative mt-4 w-[360px]">
           <label htmlFor="confirmPassword" className="mr-2 text-xl">
             Confirm password
           </label>
@@ -117,7 +119,7 @@ export default function LoginScreen() {
               required: 'Please confirm password',
               validate: (value) => value === getValues('password'),
             })}
-            className="absolute inset-y-0 right-0"
+            className="absolute inset-y-0 right-0  rounded-md shadow-sm"
           ></input>
           {errors.confirmPassword &&
             errors.confirmPassword.type === 'validate' && (

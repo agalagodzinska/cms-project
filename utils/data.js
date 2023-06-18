@@ -6,11 +6,13 @@ const data = {
       name: 'Agnieszka',
       email: 'aga.lagodzinska@gmail.com',
       password: bcrypt.hashSync('123456'),
+      favourites: {},
     },
     {
       name: 'Julia',
       email: 'jula.galkowska@gmail.com',
       password: bcrypt.hashSync('123456'),
+      favourites: {},
     },
   ],
   articles: [
