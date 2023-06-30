@@ -5,34 +5,11 @@ import database from '../../../utils/database';
 import { Favourites } from '@/utils/Favourites';
 import { getSession } from 'next-auth/react';
 
-//czy ktos jest zalogowany (jak nie to koniec)
-
-//pobieram dane artykulu z zewnątrz
-//sprawdzam czy artykuł jest już w bazie
-//nie=>dodaje artykul do bazy
-//tak=>nic
-
-//pobieram id artykulu o danym url
-//sprawdzam czy user zalogowany ma juz article id w favourites
-//tak=> usuwam article id z jego favourites
-//nie=> do favourites tego usera dodaje article id
-
-//const session = await getSession({ req });
-
 async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(400).send({ message: 'Bad Request' });
     return;
   }
-
-  // if (!session) {
-  //   res.send('User not authenticated');
-  // }
-
-  // if (!session?.user) {
-  //   res.status(401).send({ message: 'Unauthorized' });
-  //   return {};
-  // }
 
   const {
     userEmail,
@@ -85,7 +62,7 @@ async function handler(req, res) {
 
   const existingFavourite = await User.findOne({
     email: userEmail,
-    favourites: { elemMatch: { articleId } },
+    favourites: articleId,
   });
 
   if (existingFavourite) {
