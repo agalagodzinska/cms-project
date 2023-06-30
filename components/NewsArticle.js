@@ -9,13 +9,15 @@ export default function NewsArticle({ article, addRemoveFavourite }) {
   const formatDate = (s) =>
     new Date(s).toLocaleDateString(undefined, { dateStyle: 'long' });
 
-  //nie jest zapamietywane w bazie czy serduszko czerwone
-  const [isClick, setClick] = useState(false);
   return (
     <div className="relative flex flex-row justify-between p-4 rounded-md mb-4 bg-white shadow-md">
       <li className="list-none">
-        {article.image && (
+        {article.image && article.image.thumbnail && (
           <img className="" alt="" src={article.image?.thumbnail?.contentUrl} />
+        )}
+
+        {article.image && !article.image.thumbnail && (
+          <img className="" alt="" src={article.image} />
         )}
 
         <h2 className="title font-semibold text-xl">
@@ -33,13 +35,15 @@ export default function NewsArticle({ article, addRemoveFavourite }) {
         </div>
       </li>
       <div className="mr-0">
-        <Heart
-          isClick={isClick}
+        <button
+          // isClick={isClick}
           onClick={() => {
-            addRemoveFavourite;
-            setClick(!isClick);
+            addRemoveFavourite();
+            //setClick(!isClick);
           }}
-        ></Heart>
+        >
+          serduszko
+        </button>
       </div>
     </div>
   );

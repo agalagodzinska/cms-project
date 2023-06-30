@@ -5,6 +5,9 @@ import data from '../utils/data';
 import NewsArticle from './NewsArticle';
 import { useContext } from 'react';
 import { Favourites } from '../utils/Favourites';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+
 async function searchNews(q) {
   q = encodeURIComponent(q);
   const response = await fetch(
@@ -40,39 +43,32 @@ export default function HomePageBody() {
   //   //TODO
   // };
 
+  const { data: session } = useSession();
+  const userEmail = session?.user?.email;
+
   const addRemoveFavourite = async ({
-    imageUrl,
+    image,
     url,
-    title,
+    name,
     description,
     datePublished,
     provider,
     category,
   }) => {
     try {
-      await axios.post('/api/addRemoveFavourite', {
-        imageUrl,
+      const response = await axios.post('/api/auth/addRemoveFavourite', {
+        userEmail,
+        image,
         url,
-        title,
+        name,
         description,
         datePublished,
         provider,
         category,
       });
-
-      //   const registerResult = await signIn('credentials', {
-      //     redirect: false,
-      //     email,
-      //     password,
-      //   });
-      //   console.log('onsubmit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-      //   if (registerResult.error) {
-      //     //cos jak błąd
-      //     console.log('error1 ugvcfdfghnjmnhbgvgbhjngvbhjnbghnj');
-      //   }
+      console.log('Response:', response.data);
     } catch (error) {
-      console.log('error2 xecrtvbyunbytvcrxectvbyunbytvcrxecrtvbyun');
-      //znowu błąd
+      console.log('error2 ' + error);
     }
   };
 
@@ -83,8 +79,6 @@ export default function HomePageBody() {
     e.preventDefault();
     searchNews(query).then(setList);
   };
-
-  
 
   return (
     <div className=" bg-indigo-50 w-screen h-full">
@@ -111,17 +105,25 @@ export default function HomePageBody() {
               <NewsArticle
                 key={i}
                 article={article}
-                addRemoveFavourite={() =>
-                  addRemoveFavourite(
-                    article.imageUrl ? article.imageUrl : 'null',
-                    article.url,
-                    article.title ? article.title : 'null',
-                    article.description ? article.description : 'null',
-                    article.datePublished ? article.datePublished : 'null',
-                    article.provider ? article.provider : 'null',
-                    article.category ? article.category : 'null'
-                  )
-                }
+                addRemoveFavourite={() => {
+                  addRemoveFavourite({
+                    image: article.image?.thumbnail?.contentUrl
+                      ? article.image?.thumbnail?.contentUrl
+                      : 'null',
+                    url: article.url,
+                    name: article.name ? article.name : 'null',
+                    description: article.description
+                      ? article.description
+                      : 'null',
+                    datePublished: article.datePublished
+                      ? article.datePublished
+                      : 'null',
+                    provider: article.provider[0].name
+                      ? article.provider[0].name
+                      : 'vunm',
+                    category: article.category ? article.category : 'null',
+                  });
+                }}
               />
             ))}
           </ul>

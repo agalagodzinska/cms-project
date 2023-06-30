@@ -1,84 +1,90 @@
-import React from 'react';
-import { useContext } from 'react';
-import { Favourites } from '../utils/Favourites';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
-import database from '@/utils/database';
 import { useSession } from 'next-auth/react';
-import mongoose from 'mongoose';
+import axios from 'axios';
+import NewsArticle from '@/components/NewsArticle';
 
 export default function FavouritesScreen() {
-  //takie homepagebody z artykułów zalogowanego użytkownika
+  const { data: session } = useSession();
+  const userEmail = session?.user?.email;
 
-  const articles = async ({}) => {
+  const addRemoveFavourite = async ({
+    image,
+    url,
+    name,
+    description,
+    datePublished,
+    provider,
+    category,
+  }) => {
     try {
-      await axios.get('/api/showFavourites', {});
+      const response = await axios.post('/api/auth/addRemoveFavourite', {
+        userEmail,
+        image,
+        url,
+        name,
+        description,
+        datePublished,
+        provider,
+        category,
+      });
+      console.log('Response:', response.data);
     } catch (error) {
-      console.log('error2 xecrtvbyunbytvcrxectvbyunbytvcrxecrtvbyun');
-      //znowu błąd
+      console.log('error2 ' + error);
     }
   };
 
+  const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await axios.get(
+          `/api/showFavourites?userEmail=${userEmail}`
+        );
+        console.log('Fetched articles:', response.data); // Add this line
+
+        if (Array.isArray(response.data)) {
+          setArticles(response.data);
+        } else {
+          setArticles([]); // Set empty array if favourites data is not an array
+        }
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+    fetchArticles();
+  }, []);
+
+  useEffect(() => {
+    //console.log('Articles:', articles);
+  }, [articles]);
+
   return (
     <Layout title={'your favourites'}>
-      {articles}
-      <div>ulubione</div>
+      <div>
+        {articles.map((article, i) => (
+          <NewsArticle
+            key={i}
+            article={article}
+            addRemoveFavourite={() => {
+              addRemoveFavourite({
+                image: article.image?.thumbnail?.contentUrl
+                  ? article.image?.thumbnail?.contentUrl
+                  : 'brrrbbr',
+                url: article.url,
+                name: article.name ? article.name : 'rtyui',
+                description: article.description ? article.description : 'null',
+                datePublished: article.datePublished
+                  ? article.datePublished
+                  : 'null',
+                provider: 'prov',
+                category: article.category ? article.category : 'null',
+              });
+            }}
+          />
+        ))}
+      </div>
     </Layout>
   );
-  // const router = useRouter();
-  // const { state, dispatch } = useContext(Favourites);
-  // const {
-  //   favourites: { newsArticles },
-  // } = state;
-  // const addRemoveArticleHandler = (article) => {
-  //   const existArticle = state.favourites.newsArticles.find(
-  //     (x) => x.url === article.url
-  //   );
-  //   if (existArticle) {
-  //     dispatch({ type: 'FAVOURITES_REMOVE_ARTICLE', payload: article });
-  //   } else {
-  //     dispatch({
-  //       type: 'FAVOURITES_ADD_ARTICLE',
-  //       payload: { ...article, quantity },
-  //     });
-  //   }
-  // };
-  // return (
-  //   <Layout title="Your favourites">
-  //     <h1 className="mb-4 text-xl">Your articles</h1>
-  //     {newsArticles.length === 0 ? (
-  //       <div>
-  //         <div>You have no favourite articles</div>
-  //         <button
-  //           className="primary-button p-2  mt-6 "
-  //           onClick={() => router.push('/')}
-  //         >
-  //           Back to news
-  //         </button>
-  //       </div>
-  //     ) : (
-  //       // <div className="grid md:grid-cols-4 md:gap-5">
-  //       <div className="overflow-x-auto ">
-  //         <table className="min-w-full">
-  //           <thead className="border-b">
-  //             <tr>
-  //               <th className="px-5 text-left"></th>
-  //               <th className="px-5 text-left">serduszko</th>
-  //               <th className="px-5"></th>
-  //             </tr>
-  //           </thead>
-  //           <tbody>
-  //             {newsArticles.map((article) => (
-  //               <tr key={article.url} className="border-b">
-  //                 <div>{article.title}</div>
-  //               </tr>
-  //             ))}
-  //           </tbody>
-  //         </table>
-  //       </div>
-  //     )}
-  //   </Layout>
-  // );
 }

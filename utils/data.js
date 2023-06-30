@@ -17,9 +17,9 @@ const data = {
   ],
   articles: [
     {
-      imageUrl: 'image',
-      url: 'url',
-      title: '54322345678',
+      image: 'image',
+      url: 'urllll',
+      name: '54322345678',
       description: 'description',
       datePublished: 'date',
       provider: 'provider',
