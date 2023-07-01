@@ -42,12 +42,12 @@ export default function FavouritesScreen() {
         const response = await axios.get(
           `/api/showFavourites?userEmail=${userEmail}`
         );
-        console.log('Fetched articles:', response.data); // Add this line
+        console.log('Fetched articles:', response.data);
 
         if (Array.isArray(response.data)) {
           setArticles(response.data);
         } else {
-          setArticles([]); // Set empty array if favourites data is not an array
+          setArticles([]);
         }
       } catch (error) {
         console.log('error', error);
@@ -57,11 +57,32 @@ export default function FavouritesScreen() {
   }, []);
 
   useEffect(() => {
-    //console.log('Articles:', articles);
-  }, [articles]);
+    const fetchUpdatedArticles = async () => {
+      try {
+        const response = await axios.get(
+          `/api/showFavourites?userEmail=${userEmail}`
+        );
+        console.log('Fetched updated articles:', response.data);
+
+        if (Array.isArray(response.data)) {
+          setArticles(response.data);
+        } else {
+          setArticles([]);
+        }
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+
+    const interval = setInterval(fetchUpdatedArticles, 5000); // Fetch updated articles every 5 seconds
+
+    return () => {
+      clearInterval(interval); // Cleanup the interval when the component unmounts
+    };
+  }, [userEmail]); // Add userEmail as a dependency to update when the user changes
 
   return (
-    <Layout title={'your favourites'}>
+    <Layout title={'Your Favorites'}>
       <div>
         {articles.map((article, i) => (
           <NewsArticle
@@ -82,6 +103,7 @@ export default function FavouritesScreen() {
                 category: article.category ? article.category : 'null',
               });
             }}
+            heart={true}
           />
         ))}
       </div>

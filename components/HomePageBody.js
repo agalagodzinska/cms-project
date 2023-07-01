@@ -55,6 +55,7 @@ export default function HomePageBody() {
     provider,
     category,
   }) => {
+    console.log(userEmail + ' email ' + url + ' url');
     try {
       const response = await axios.post('/api/auth/addRemoveFavourite', {
         userEmail,
@@ -68,7 +69,7 @@ export default function HomePageBody() {
       });
       console.log('Response:', response.data);
     } catch (error) {
-      console.log('error2 ' + error);
+      console.log('error2 ' + error.response);
     }
   };
 
@@ -120,10 +121,11 @@ export default function HomePageBody() {
                       : 'null',
                     provider: article.provider[0].name
                       ? article.provider[0].name
-                      : 'vunm',
+                      : 'null',
                     category: article.category ? article.category : 'null',
                   });
                 }}
+                heart={false}
               />
             ))}
           </ul>

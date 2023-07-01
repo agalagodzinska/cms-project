@@ -20,6 +20,7 @@
     "react": "18.2.0",
     "react-animated-heart": "^0.0.8",
     "react-dom": "18.2.0",
+    "react-heart": "^1.0.6",
     "react-hook-form": "^7.44.3"
   },
   "devDependencies": {

@@ -1,10 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Heart from 'react-animated-heart';
 import { useState } from 'react';
+import Heart from 'react-animated-heart';
 
-export default function NewsArticle({ article, addRemoveFavourite }) {
+export default function NewsArticle({ article, addRemoveFavourite, heart }) {
+  const [isClick, setClick] = useState(heart);
+
   const separateWords = (s) => s.replace(/[A-Z][a-z]+/g, '$& ').trim();
   const formatDate = (s) =>
     new Date(s).toLocaleDateString(undefined, { dateStyle: 'long' });
@@ -35,15 +37,15 @@ export default function NewsArticle({ article, addRemoveFavourite }) {
         </div>
       </li>
       <div className="mr-0">
-        <button
-          // isClick={isClick}
-          onClick={() => {
-            addRemoveFavourite();
-            //setClick(!isClick);
-          }}
-        >
-          serduszko
-        </button>
+        <div>
+          <Heart
+            isClick={isClick}
+            onClick={() => {
+              setClick(!isClick);
+              addRemoveFavourite();
+            }}
+          />
+        </div>
       </div>
     </div>
   );
